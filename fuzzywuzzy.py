@@ -69,7 +69,7 @@ def check_empty_string(func):
 
 bad_chars = str("").join([chr(i) for i in range(128, 256)])  # ascii dammit!
 if PY3:
-    translation_table = dict((ord(c), None) for c in bad_chars)
+    translation_table = {ord(c): None for c in bad_chars}
     unicode = str
 
 
@@ -255,10 +255,7 @@ def _token_set(s1, s2, partial=True, force_ascii=True, do_full_process=True):
     combined_1to2 = combined_1to2.strip()
     combined_2to1 = combined_2to1.strip()
 
-    if partial:
-        ratio_func = partial_ratio
-    else:
-        ratio_func = ratio
+    ratio_func = partial_ratio if partial else ratio
 
     pairwise = [
         ratio_func(sorted_sect, combined_1to2),
@@ -673,9 +670,7 @@ def dedupe(contains_dupes, threshold=70, scorer=token_set_ratio):
             extractor.append(filter_sort[0][0])
 
     # uniquify *extractor* list
-    keys = {}
-    for e in extractor:
-        keys[e] = 1
+    keys = {e: 1 for e in extractor}
     extractor = keys.keys()
 
     # check that extractor differs from contain_dupes (e.g. duplicates were found)
